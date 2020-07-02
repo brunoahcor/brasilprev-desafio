@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+
+  #brasilprev-desafio:
+  #  build: ./
+  #  ports:
+  #    - "8080:8080"
+  #  depends_on:
+  #    - db
+
+  db:
+    container_name: brasilprev-db
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=brasilprev
+      - POSTGRES_USER=brasilprev
+      - POSTGRES_DB=dev
+
+  db-adminer:
+    container_name: brasilprev-db-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080

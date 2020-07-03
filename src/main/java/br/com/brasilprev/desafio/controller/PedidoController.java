@@ -1,5 +1,7 @@
 package br.com.brasilprev.desafio.controller;
 
+import static org.mockito.Mockito.description;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.brasilprev.desafio.model.vo.ErroVO;
 import br.com.brasilprev.desafio.model.vo.PedidoVO;
 import br.com.brasilprev.desafio.service.PedidoService;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+@Api(description = "API desenvolvida para efetuar as operações dos pedidos")
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {
@@ -25,7 +31,16 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retorna uma lista de pedidos.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(method = RequestMethod.GET, 
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> listar(
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "size", defaultValue = "10") Integer pageSize) {
@@ -41,6 +56,15 @@ public class PedidoController {
         }
     }
     
+    @ApiOperation(value = "Salva o produto no banco de dados.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+	        @ApiResponse(code = 201, message = "Produto inserido com sucesso!"),
+            @ApiResponse(code = 400, message = "Requisicao invalida."),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
     @RequestMapping(value = "/salvar", 
                     method = RequestMethod.PUT, 
                     produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })

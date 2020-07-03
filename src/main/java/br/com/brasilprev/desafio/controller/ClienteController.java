@@ -20,7 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.brasilprev.desafio.model.vo.ClienteVO;
 import br.com.brasilprev.desafio.model.vo.ErroVO;
 import br.com.brasilprev.desafio.service.ClienteService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(description = "API desenvolvida para efetuar as operações dos clientes")
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -28,7 +33,16 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retorna uma lista de clientes.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(method = RequestMethod.GET, 
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer pageSize) {
 
@@ -43,7 +57,17 @@ public class ClienteController {
         }
     }
 
-    @RequestMapping(value = "/{id}/buscarPorId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retorna o cliente pelo ID.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(value = "/{id}/buscarPorId", 
+                    method = RequestMethod.GET, 
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> buscarPorId(@PathVariable("id") Long id) {
 
         try {
@@ -59,7 +83,17 @@ public class ClienteController {
         }
     }
 
-    @RequestMapping(value = "/{cpf}/buscarPorCpf", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retorna o cliente pelo CPF.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(value = "/{cpf}/buscarPorCpf", 
+                    method = RequestMethod.GET, 
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> buscarPorCpf(@PathVariable("cpf") String cpf) {
 
         try {
@@ -75,8 +109,19 @@ public class ClienteController {
         }
     }
 
-    @RequestMapping(value = "/salvar", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
+    
+	@ApiOperation(value = "Salva o cliente no banco de dados.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+	        @ApiResponse(code = 201, message = "Cliente inserido com sucesso!"),
+            @ApiResponse(code = 400, message = "Requisicao invalida."),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(value = "/salvar", 
+                    method = RequestMethod.PUT, 
+                    produces = { MediaType.APPLICATION_JSON_VALUE,MediaType.TEXT_PLAIN_VALUE })
     public ResponseEntity<?> salvar(@Valid @RequestBody ClienteVO vo) {
 
         try {
@@ -87,8 +132,17 @@ public class ClienteController {
         }
     }
 
-    @RequestMapping(value = "/{id}/deletar", method = RequestMethod.DELETE, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
+    @ApiOperation(value = "Apaga o cliente do banco de dados.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(value = "/{id}/deletar", 
+                    method = RequestMethod.DELETE, 
+                    produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<?> deletar(@PathVariable("id") Long id) {
 
         try {

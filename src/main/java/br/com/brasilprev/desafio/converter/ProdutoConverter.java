@@ -16,20 +16,20 @@ public class ProdutoConverter {
     @Autowired
     private ModelMapper mm;
 
-    public ProdutoVO convertToVO(Produto produto) {
+    public ProdutoVO toVO(Produto produto) {
         return mm.map(produto, ProdutoVO.class);
     } 
 
-    public Produto convertToEntity(ProdutoVO vo) {
+    public Produto toEntity(ProdutoVO vo) {
         return mm.map(vo, Produto.class);
     } 
 
     public List<ProdutoVO> convertToListVO(List<Produto> produtos) {
-        return produtos.stream().map(produto -> mm.map(produto, ProdutoVO.class)).collect(Collectors.toList());
+        return produtos.stream().map(this::toVO).collect(Collectors.toList());
     } 
 
     public List<Produto> convertToListEntity(List<ProdutoVO> vos) {
-        return vos.stream().map(vo -> mm.map(vo, Produto.class)).collect(Collectors.toList());
+        return vos.stream().map(this::toEntity).collect(Collectors.toList());
     } 
     
 }

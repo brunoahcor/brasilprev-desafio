@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class PedidoVO {
 
     private Long id;
@@ -21,5 +23,10 @@ public class PedidoVO {
     private Integer qtd;
     private BigDecimal valorTotal;
     private LocalDateTime dataCadastro;
+
+    public PedidoVO(ClienteVO cliente){
+        this.cliente = cliente;
+        this.dataCadastro = LocalDateTime.now();
+    }
     
 }

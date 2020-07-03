@@ -16,20 +16,20 @@ public class ClienteConverter {
     @Autowired
     private ModelMapper mm;
 
-    public ClienteVO convertToVO(Cliente cliente) {
+    public ClienteVO toVO(Cliente cliente) {
         return mm.map(cliente, ClienteVO.class);
     } 
 
-    public Cliente convertToEntity(ClienteVO vo) {
+    public Cliente toEntity(ClienteVO vo) {
         return mm.map(vo, Cliente.class);
     } 
 
     public List<ClienteVO> convertToListVO(List<Cliente> clientes) {
-        return clientes.stream().map(cliente -> mm.map(cliente, ClienteVO.class)).collect(Collectors.toList());
+        return clientes.stream().map(this::toVO).collect(Collectors.toList());
     } 
 
     public List<Cliente> convertToListEntity(List<ClienteVO> vos) {
-        return vos.stream().map(vo -> mm.map(vo, Cliente.class)).collect(Collectors.toList());
+        return vos.stream().map(this::toEntity).collect(Collectors.toList());
     } 
     
 }

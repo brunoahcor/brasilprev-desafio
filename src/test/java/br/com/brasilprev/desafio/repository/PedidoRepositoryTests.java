@@ -34,43 +34,27 @@ public class PedidoRepositoryTests {
     @Autowired
     private PedidoRepository repository;
 
+    Cliente cliente1 = new Cliente("Jararn", "161.047.770-74", "jararn@gmail.com");
+    Cliente cliente2 = new Cliente("Rokur", "657.282.350-42", "rokur@gmail.com");
+
     @BeforeEach
     public void setUp() {
-
         // # Initial Clientes
-        clienteRepository.findByCpf("161.047.770-74").orElseGet(()->
-            clienteRepository.save(new Cliente("Jararn", "161.047.770-74", "jararn@gmail.com"))
-        );
-
-        clienteRepository.findByCpf("657.282.350-42").orElseGet(()->
-            clienteRepository.save(new Cliente("Rokur", "657.282.350-42", "rokur@gmail.com"))
-        );
-
-        clienteRepository.findByCpf("538.133.570-90").orElseGet(()->
-            clienteRepository.save(new Cliente("Ciolar", "538.133.570-90", "ciolar@gmail.com"))
-        );
-
-        clienteRepository.findByCpf("397.197.300-05").orElseGet(()->
-            clienteRepository.save(new Cliente("Welfim", "397.197.300-05", "welfim@gmail.com"))
-        );
-
-        clienteRepository.findByCpf("274.598.920-09").orElseGet(()->
-            clienteRepository.save(new Cliente("Enbi", "274.598.920-09", "enbi@gmail.com"))
-        );
+        clienteRepository.findByCpf(cliente1.getCpf()).orElseGet(()->clienteRepository.save(cliente1));
+        clienteRepository.findByCpf(cliente2.getCpf()).orElseGet(()->clienteRepository.save(cliente2));
 
         // # Initial Produtos
         for (int i = 0; i < 20; i++) {
             BigDecimal valorUnidade = new BigDecimal("2").multiply(new BigDecimal(String.valueOf(i + 1)));
             produtoRepository.save(new Produto("Produto ".concat(String.valueOf(i + 1)), valorUnidade));
         }
-
     }
 
     @Test
     @Order(1)
     public void testSave() {
 
-        Optional<Cliente> cliente = clienteRepository.findByCpf("161.047.770-74");
+        Optional<Cliente> cliente = clienteRepository.findByCpf(cliente2.getCpf());
 
         Pedido pedido = new Pedido(cliente.get());
         List<ItemPedido> itensPedido = new ArrayList<>();
@@ -93,11 +77,11 @@ public class PedidoRepositoryTests {
 
     @AfterEach
     public void testDeleteAll() {
-        
+        /*
         repository.deleteAll();
         produtoRepository.deleteAll();
         clienteRepository.deleteAll();
-       
+        */
     }
 
 }

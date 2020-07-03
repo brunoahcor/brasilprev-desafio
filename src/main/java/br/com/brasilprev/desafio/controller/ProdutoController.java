@@ -1,7 +1,5 @@
 package br.com.brasilprev.desafio.controller;
 
-import static org.mockito.Mockito.description;
-
 import java.util.Optional;
 
 import javax.validation.Valid;

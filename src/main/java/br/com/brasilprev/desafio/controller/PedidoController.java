@@ -1,7 +1,5 @@
 package br.com.brasilprev.desafio.controller;
 
-import static org.mockito.Mockito.description;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -27,8 +27,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteVO salvar(ClienteVO vo){
-        Cliente cliente = clienteRepository.save( converter.convertToEntity(vo) );
-        return converter.convertToVO(cliente);
+        Cliente cliente = clienteRepository.save( converter.toEntity(vo) );
+        return converter.toVO(cliente);
     }
 
     @Override
@@ -41,13 +41,13 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteVO buscarPorId(Long id){
         Optional<Cliente> cliente = clienteRepository.findById(id);
-        return cliente.isPresent() ? converter.convertToVO(cliente.get()) : null; 
+        return cliente.isPresent() ? converter.toVO(cliente.get()) : null; 
     }
 
     @Override
     public ClienteVO buscarPorCpf(String cpf){
         Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);
-        return cliente.isPresent() ? converter.convertToVO(cliente.get()) : null;
+        return cliente.isPresent() ? converter.toVO(cliente.get()) : null;
     }
 
     @Override

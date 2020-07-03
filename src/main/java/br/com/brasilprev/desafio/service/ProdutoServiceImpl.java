@@ -25,8 +25,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoVO salvar(ProdutoVO vo){
-        Produto produto = produtoRepository.save( converter.convertToEntity(vo) );
-        return converter.convertToVO(produto);
+        Produto produto = produtoRepository.save( converter.toEntity(vo) );
+        return converter.toVO(produto);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public ProdutoVO buscarPorId(Long id){
         Optional<Produto> produto = produtoRepository.findById(id);
-        return converter.convertToVO(produto.get());
+        return converter.toVO(produto.get());
     }
 
     @Override

@@ -77,11 +77,9 @@ public class PedidoRepositoryTests {
 
     @AfterEach
     public void testDeleteAll() {
-        /*
         repository.deleteAll();
         produtoRepository.deleteAll();
         clienteRepository.deleteAll();
-        */
     }
 
 }

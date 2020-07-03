@@ -1,5 +1,6 @@
 package br.com.brasilprev.desafio.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoVO salvar(ProdutoVO vo){
+        vo.setDataCadastro( Optional.ofNullable(vo.getDataCadastro()).orElse(LocalDateTime.now()) );
         Produto produto = produtoRepository.save( converter.toEntity(vo) );
         return converter.toVO(produto);
     }

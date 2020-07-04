@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -64,7 +62,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteVO buscarPorCpf(String cpf) throws BusinessException {
-        if( !Optional.ofNullable( cpf ).isPresent() || !Validador.isCPF(cpf) ){
+        if( !Validador.isCPF(cpf) ){
             throw new BusinessException("CPF nao informado.",HttpStatus.BAD_REQUEST);
         }
         Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);

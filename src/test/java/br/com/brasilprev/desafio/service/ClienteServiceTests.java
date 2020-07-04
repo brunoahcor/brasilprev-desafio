@@ -34,7 +34,7 @@ public class ClienteServiceTests {
 
     @Test
     @Order(1)
-    public void testSaveSuccess() {
+    public void testSaveSuccess() throws Exception {
         ClienteVO c1 = service.salvar(cliente1);
         ClienteVO c2 = service.salvar(cliente2);
         assertNotNull(c1);
@@ -63,7 +63,7 @@ public class ClienteServiceTests {
 
     @Test
     @Order(4)
-    public void testDeletarPorIdSuccess() {
+    public void testDeletarPorIdSuccess() throws Exception {
         ClienteVO cliente = service.buscarPorCpf(cliente2.getCpf());
         service.deletar(cliente.getId());
     }

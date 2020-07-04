@@ -38,11 +38,15 @@ public class PedidoServiceTests {
     ClienteVO cliente2 = new ClienteVO(null, "Welfim", "397.197.300-05", "welfim@gmail.com", LocalDateTime.now());
 
     @BeforeEach
-    public void setUp() {
-        // # Initial Clientes
-        Optional.ofNullable(clienteService.buscarPorCpf(cliente1.getCpf())).orElseGet(() -> clienteService.salvar(cliente1));
-        Optional.ofNullable(clienteService.buscarPorCpf(cliente2.getCpf())).orElseGet(() -> clienteService.salvar(cliente2));
-
+    public void setUp() throws Exception {
+      
+        if(Optional.ofNullable(clienteService.buscarPorCpf(cliente1.getCpf())).isPresent()){
+            clienteService.salvar(cliente1);
+        }
+        if(Optional.ofNullable(clienteService.buscarPorCpf(cliente2.getCpf())).isPresent()){
+            clienteService.salvar(cliente2);
+        }
+        
         // # Initial Produtos
         for (int i = 0; i < 20; i++) {
             BigDecimal valorUnidade = new BigDecimal("2").multiply(new BigDecimal(String.valueOf(i + 21)));
@@ -52,7 +56,7 @@ public class PedidoServiceTests {
 
     @Test
     @Order(1)
-    public void testSave() {
+    public void testSave() throws Exception {
 
         ClienteVO cliente = clienteService.buscarPorCpf(cliente1.getCpf());
 

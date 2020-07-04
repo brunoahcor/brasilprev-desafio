@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,11 +19,13 @@ import lombok.ToString;
 @ToString
 public class ProdutoVO {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
     @NotBlank
+    @ApiModelProperty(required = true)
     private String nome;
     private BigDecimal valorUnidade;
-    @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private LocalDateTime dataCadastro;
 
     public ProdutoVO(String nome, BigDecimal valorUnidade) {

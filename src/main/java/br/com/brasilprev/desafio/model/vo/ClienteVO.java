@@ -6,8 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,18 +20,22 @@ import lombok.ToString;
 @ToString
 public class ClienteVO {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
     @NotBlank(message = "{nome.not.blank}")
+    @ApiModelProperty(required = true)
     private String nome;
     @Pattern(
         regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$",
         message = "{cpf.not.valid}"
     )
+    @ApiModelProperty(required = true)
     private String cpf;
     @NotBlank(message = "{email.not.blank}")
     @Email(message = "{email.not.valid}")
+    @ApiModelProperty(required = true)
     private String email;
-    @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private LocalDateTime dataCadastro;
     
 }

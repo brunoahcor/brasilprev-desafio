@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.brasilprev.desafio.converter.PedidoConverter;
+import br.com.brasilprev.desafio.exception.BusinessException;
 import br.com.brasilprev.desafio.model.entity.Cliente;
 import br.com.brasilprev.desafio.model.entity.ItemPedido;
 import br.com.brasilprev.desafio.model.entity.Pedido;
@@ -42,7 +44,7 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoConverter converter;
 
     @Override
-    public PedidoVO salvar(PedidoVO vo){ 
+    public PedidoVO salvar(PedidoVO vo) throws Exception { 
 
         logger.info("### salvar :: vo = {}",vo.toString());
 
@@ -56,8 +58,10 @@ public class PedidoServiceImpl implements PedidoService {
         
         for (ItemPedidoVO item : vo.getItensPedido()) {
             Optional<Produto> produto = produtoRepository.findById(item.getProduto().getId());
-            logger.info("### salvar :: produto = {}",produto.toString());
-            lista.add( new ItemPedido(10, produto.get(), pedido) );
+            if(item.getQtd() < 1){
+                throw new BusinessException("Produto '"+produto.get().getNome()+"' quantidade nao informado.",HttpStatus.NO_CONTENT);
+            }
+            lista.add( new ItemPedido(item.getQtd(), produto.get(), pedido) );
         }
 
         pedido.setQtd(lista.stream().mapToInt(ItemPedido::getQtd).sum());
@@ -76,13 +80,13 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public PedidoVO buscarPorId(Long id){
+    public PedidoVO buscarPorId(Long id) throws Exception {
         Optional<Pedido> pedido = repository.findById(id);
         return converter.toVO(pedido.get());
     }
 
     @Override
-    public void deletar(Long id){
+    public void deletar(Long id) throws Exception {
         repository.deleteById(id);
     }
 

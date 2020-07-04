@@ -34,6 +34,7 @@ public class Produto implements Serializable {
     @SequenceGenerator(name="produto_sequence", sequenceName="seq_produto")
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String nome;
 
     @Column(name = "valor_unidade")

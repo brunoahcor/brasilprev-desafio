@@ -1,7 +1,5 @@
 package br.com.brasilprev.desafio.controller;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.brasilprev.desafio.exception.BusinessException;
 import br.com.brasilprev.desafio.model.vo.ClienteVO;
 import br.com.brasilprev.desafio.model.vo.ErroVO;
 import br.com.brasilprev.desafio.service.ClienteService;
@@ -71,13 +70,10 @@ public class ClienteController {
     public ResponseEntity<?> buscarPorId(@PathVariable("id") Long id) {
 
         try {
-
             ClienteVO vo = clienteService.buscarPorId(id);
-            if (!Optional.ofNullable(vo).isPresent()) {
-                return new ResponseEntity<>(new ErroVO(HttpStatus.NOT_FOUND, "Cliente nao encontrado!"), HttpStatus.NOT_FOUND);
-            }
-
             return new ResponseEntity<ClienteVO>(vo, HttpStatus.OK);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
         } catch (final Exception e) {
             return new ResponseEntity<ErroVO>(new ErroVO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -97,18 +93,14 @@ public class ClienteController {
     public ResponseEntity<?> buscarPorCpf(@PathVariable("cpf") String cpf) {
 
         try {
-
             ClienteVO vo = clienteService.buscarPorCpf(cpf);
-            if (!Optional.ofNullable(vo).isPresent()) {
-                return new ResponseEntity<>(new ErroVO(HttpStatus.NOT_FOUND, "Cliente nao encontrado!"), HttpStatus.NOT_FOUND);
-            }
-
             return new ResponseEntity<ClienteVO>(vo, HttpStatus.OK);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), HttpStatus.NO_CONTENT);
         } catch (final Exception e) {
-            return new ResponseEntity<ErroVO>(new ErroVO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+           return new ResponseEntity<>(new ErroVO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     
 	@ApiOperation(value = "Salva o cliente no banco de dados.", response = ResponseEntity.class)	
 	@ApiResponses(value = {
@@ -127,6 +119,8 @@ public class ClienteController {
         try {
             ClienteVO retorno = clienteService.salvar(vo);
             return new ResponseEntity<ClienteVO>(retorno, HttpStatus.CREATED);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
         } catch (final Exception e) {
             return new ResponseEntity<ErroVO>(new ErroVO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -146,15 +140,10 @@ public class ClienteController {
     public ResponseEntity<?> deletar(@PathVariable("id") Long id) {
 
         try {
-
-            ClienteVO vo = clienteService.buscarPorId(id);
-            if (!Optional.ofNullable(vo).isPresent()) {
-                return new ResponseEntity<>(new ErroVO(HttpStatus.NOT_FOUND, "Cliente nao encontrado!"), HttpStatus.NOT_FOUND);
-            }
-
-            clienteService.deletar(vo.getId());
-
+            clienteService.deletar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
         } catch (final Exception e) {
             return new ResponseEntity<ErroVO>(new ErroVO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

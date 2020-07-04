@@ -1,7 +1,5 @@
 package br.com.brasilprev.desafio.controller;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.brasilprev.desafio.exception.BusinessException;
+import br.com.brasilprev.desafio.model.vo.ErroVO;
 import br.com.brasilprev.desafio.model.vo.ProdutoVO;
 import br.com.brasilprev.desafio.service.ProdutoService;
 import io.swagger.annotations.Api;
@@ -56,6 +56,7 @@ public class ProdutoController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @ApiOperation(value = "Retorna o produto pelo ID.", response = ResponseEntity.class)	
 	@ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso!"),
@@ -70,13 +71,33 @@ public class ProdutoController {
     public ResponseEntity<?> buscarPorId(@PathVariable("id") Long id) {
 
 		try {
-
             ProdutoVO vo = produtoService.buscarPorId(id);
-			if (!Optional.of(vo).isPresent()) {
-				return new ResponseEntity<String>("Produto nao foi encontrado!",HttpStatus.NOT_FOUND);
-			}
+            return new ResponseEntity<ProdutoVO>(vo, HttpStatus.OK);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
+		} catch (final Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
 
-			return new ResponseEntity<ProdutoVO>(vo, HttpStatus.OK);
+    @ApiOperation(value = "Retorna o produto pelo ID.", response = ResponseEntity.class)	
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso!"),
+            @ApiResponse(code = 401, message = "Usuário não autenticado."),
+            @ApiResponse(code = 403, message = "Usuário não possui autorização para acessar o recurso."),
+	        @ApiResponse(code = 404, message = "O recurso nao foi encontrado."),
+	        @ApiResponse(code = 500, message = "Ocorreu um erro inesperado, contate o administrador.")
+	})
+    @RequestMapping(value = "/{nome}/buscarPorNome", 
+                    method = RequestMethod.GET, 
+                    produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<?> buscarPorNome(@PathVariable("nome") String nome) {
+
+		try {
+            ProdutoVO vo = produtoService.buscarPorNome(nome);
+            return new ResponseEntity<ProdutoVO>(vo, HttpStatus.OK);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
 		} catch (final Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -99,6 +120,8 @@ public class ProdutoController {
 		try {
             ProdutoVO retorno = produtoService.salvar(vo);
             return new ResponseEntity<ProdutoVO>(retorno, HttpStatus.CREATED); 
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
 		} catch (final Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -118,15 +141,10 @@ public class ProdutoController {
 	public ResponseEntity<?> deletar(@PathVariable("id") Long id) {
 
 		try {
-
-            ProdutoVO vo = produtoService.buscarPorId(id);
-			if (!Optional.of(vo).isPresent()) {
-				return new ResponseEntity<String>("Produto nao foi encontrado!",HttpStatus.NOT_FOUND);
-			}
-
-			produtoService.deletar(vo.getId());
-
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            produtoService.deletar(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (final BusinessException e) {
+            return new ResponseEntity<>(new ErroVO(e.getStatus(), e.getMessage()), e.getStatus());
 		} catch (final Exception e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

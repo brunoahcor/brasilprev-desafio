@@ -7,12 +7,14 @@ import br.com.brasilprev.desafio.model.vo.ProdutoVO;
 
 public interface ProdutoService {
 
-    ProdutoVO salvar(ProdutoVO vo);
+    ProdutoVO salvar(ProdutoVO vo) throws Exception;
 
     Page<ProdutoVO> listar(Pageable pageable);
 
-    ProdutoVO buscarPorId(Long id);
+    ProdutoVO buscarPorId(Long id) throws Exception;
 
-    void deletar(Long id);
+    ProdutoVO buscarPorNome(String nome) throws Exception;
+
+    void deletar(Long id) throws Exception;
     
 }
